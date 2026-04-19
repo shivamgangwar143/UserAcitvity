@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Activity Data Pipeline - Data Engineering Portfolio</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --bg-card: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-bronze: #cd7f32;
+            --accent-silver: #c0c0c0;
+            --accent-gold: #ffd700;
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --gradient-primary: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Outfit', sans-serif;
+        }
+
+        /* Header Section */
+        header {
+            padding: 100px 20px;
+            text-align: center;
+            background: radial-gradient(circle at top, #1e1b4b, var(--bg-dark) 70%);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            position: relative;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0IiBoZWlnaHQ9IjQiPgo8cmVjdCB3aWR0aD0iNCIgaGVpZ2h0PSI0IiBmaWxsPSIjZmZmIiBmaWxsLW9wYWNpdHk9IjAuMDUiLz4KPC9zdmc+') repeat;
+            opacity: 0.5;
+            z-index: 0;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        .badges {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            flex-wrap: wrap;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: transform 0.3s, background 0.3s;
+        }
+
+        .badge:hover {
+            transform: translateY(-3px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 4px;
+            background: var(--gradient-primary);
+            margin: 15px auto 0;
+            border-radius: 2px;
+        }
+
+        /* Architecture Flow */
+        .architecture-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .arch-card {
+            background: var(--bg-card);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: transform 0.4s, box-shadow 0.4s;
+            overflow: hidden;
+        }
+
+        .arch-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; height: 4px;
+        }
+
+        .arch-card.bronze::before { background: var(--accent-bronze); }
+        .arch-card.silver::before { background: var(--accent-silver); }
+        .arch-card.gold::before { background: var(--accent-gold); }
+        .arch-card.bi::before { background: var(--accent-blue); }
+
+        .arch-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+        }
+
+        .arch-icon {
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+
+        .arch-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .arch-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Features List */
+        .features-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .features-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .feature-box {
+            background: rgba(30, 41, 59, 0.5);
+            padding: 30px;
+            border-radius: 16px;
+            border-left: 4px solid var(--accent-purple);
+        }
+
+        .feature-box h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: #fff;
+        }
+
+        .feature-box ul {
+            list-style: none;
+        }
+
+        .feature-box li {
+            margin-bottom: 10px;
+            color: var(--text-muted);
+            position: relative;
+            padding-left: 25px;
+        }
+
+        .feature-box li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--accent-blue);
+            font-weight: bold;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 50px;
+            color: var(--text-muted);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-content">
+            <h1>User Activity Data Pipeline</h1>
+            <p class="subtitle">A production-grade Medallion Architecture ETL pipeline processing millions of events using PySpark and PostgreSQL.</p>
+            <div class="badges">
+                <span class="badge">Apache Spark</span>
+                <span class="badge">Python</span>
+                <span class="badge">PostgreSQL</span>
+                <span class="badge">Docker</span>
+                <span class="badge">Power BI</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 class="section-title">Medallion Architecture Flow</h2>
+        
+        <div class="architecture-grid">
+            <!-- Bronze Layer -->
+            <div class="arch-card bronze">
+                <div class="arch-icon">🥉</div>
+                <h3>Bronze Layer</h3>
+                <p><strong>Raw Data Ingestion</strong></p>
+                <p>Ingests synthetic CSV data (simulating 2M+ rows) into a Data Lake. Stored as raw Parquet files with ingestion timestamps to maintain an immutable history.</p>
+            </div>
+
+            <!-- Silver Layer -->
+            <div class="arch-card silver">
+                <div class="arch-icon">🥈</div>
+                <h3>Silver Layer</h3>
+                <p><strong>Data Cleaning & Transformation</strong></p>
+                <p>Handles data quality issues: removes duplicates, normalizes mixed timestamp formats, filters negative watch times, and fills null values. Partitioned by date for performance.</p>
+            </div>
+
+            <!-- Gold Layer -->
+            <div class="arch-card gold">
+                <div class="arch-icon">🥇</div>
+                <h3>Gold Layer</h3>
+                <p><strong>Business Aggregations</strong></p>
+                <p>Computes highly optimized metrics: Daily Active Users (DAU), watch-time per content, region engagement, and device distribution datasets.</p>
+            </div>
+
+            <!-- Serving Layer -->
+            <div class="arch-card bi">
+                <div class="arch-icon">📊</div>
+                <h3>Serving Layer</h3>
+                <p><strong>PostgreSQL & Power BI</strong></p>
+                <p>Loads Gold layer Parquet data into a PostgreSQL Data Warehouse via JDBC, making it instantly queryable for Power BI dashboards and Ad-hoc SQL.</p>
+            </div>
+        </div>
+
+        <h2 class="section-title">Key Engineering Features</h2>
+
+        <div class="features-container">
+            <div class="feature-box">
+                <h3>🛠️ Data Quality & Transformations</h3>
+                <ul>
+                    <li>Dynamic parsing of 4 different timestamp formats.</li>
+                    <li>Deduplication across 2+ million rows.</li>
+                    <li>Handling missing categorical data (Device, Region).</li>
+                    <li>Removing logically invalid data (negative watch time).</li>
+                </ul>
+            </div>
+
+            <div class="feature-box">
+                <h3>⚡ Performance Optimizations</h3>
+                <ul>
+                    <li><strong>Columnar Storage:</strong> Parquet + Snappy compression reduces size by ~70%.</li>
+                    <li><strong>Partition Pruning:</strong> Silver layer partitioned by Date to prevent full-table scans.</li>
+                    <li><strong>Spark Tuning:</strong> Optimized shuffle partitions and coalesced outputs for single-node efficiency.</li>
+                    <li><strong>Incremental Loading:</strong> Uses high-water-mark timestamps to process only new data.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>Architected & Built as a Data Engineering Portfolio Project.</p>
+    </footer>
+
+    <!-- Add subtle interactive hover effect to cards via JS -->
+    <script>
+        document.querySelectorAll('.arch-card').forEach(card => {
+            card.addEventListener('mousemove', (e) => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255,255,255,0.05), var(--bg-card) 40%)`;
+            });
+            card.addEventListener('mouseleave', () => {
+                card.style.background = 'var(--bg-card)';
+            });
+        });
+    </script>
+</body>
+</html>
