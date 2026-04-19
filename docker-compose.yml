@@ -1,0 +1,57 @@
+version: '3.8'
+
+services:
+  # ============================================================
+  # PySpark + Jupyter Lab — runs the ETL pipeline
+  # ============================================================
+  pyspark-jupyter:
+    image: easewithdata/pyspark-jupyter-lab
+    user: root
+    container_name: pyspark-pipeline
+    ports:
+      - "8888:8888"
+      - "4040:4040"
+    environment:
+      JUPYTER_PORT: 8888
+      SPARK_UI_PORT: 4040
+      GRANT_SUDO: yes
+    volumes:
+      - ./:/app
+    working_dir: /app
+    depends_on:
+      postgres:
+        condition: service_started
+
+  # ============================================================
+  # PostgreSQL — Data Warehouse (Gold layer queryable store)
+  # ============================================================
+  postgres:
+    image: postgres:17
+    container_name: activity-postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: user_activity_dw
+      POSTGRES_USER: dataengineer
+      POSTGRES_PASSWORD: pipeline123
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dataengineer -d user_activity_dw"]
+      interval: 5s
+      retries: 5
+
+  # ============================================================
+  # Adminer — Web-based SQL client (browse data at port 8080)
+  # ============================================================
+  adminer:
+    image: adminer:4
+    container_name: activity-adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  pg_data:

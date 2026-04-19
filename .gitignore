@@ -1,0 +1,28 @@
+# Data files (too large for git)
+data/raw/*.csv
+data/lake/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+*.egg-info/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+pg_data/
+
+# Checkpoints
+data/checkpoints/
+
+# Jupyter
+.ipynb_checkpoints/
